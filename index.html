@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn Education URL Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.2em;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 1.1em;
+        }
+
+        input[type="url"] {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        input[type="url"]:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .generate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 25px;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+
+        .results {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .url-card {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .url-card:hover {
+            border-color: #667eea;
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .url-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .url-description {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .url-link {
+            word-break: break-all;
+            background: white;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #0066cc;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .url-link:hover {
+            background: #f0f8ff;
+            border-color: #0066cc;
+        }
+
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+            transform: translateY(-1px);
+        }
+
+        .error {
+            color: #dc3545;
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-weight: 500;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .info-header {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .creator-info {
+            margin-bottom: 15px;
+        }
+
+        .creator-text {
+            display: block;
+            color: #333;
+            font-size: 1em;
+            margin-bottom: 5px;
+        }
+
+        .connect-text {
+            color: #0066cc;
+            font-size: 0.9em;
+            font-style: italic;
+        }
+
+        .platform-notice {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .notice-icon {
+            font-size: 1.2em;
+        }
+
+        .notice-text {
+            color: #856404;
+            font-size: 0.9em;
+        }
+
+        .usage-note {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.95em;
+            color: #1976d2;
+        }
+
+        .how-to-use {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .how-to-title {
+            color: #333;
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .step-list {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .step-list ol {
+            padding-left: 20px;
+        }
+
+        .step-list li {
+            margin-bottom: 8px;
+        }
+
+        .pro-tips {
+            background: #e8f5e8;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .tips-title {
+            color: #2e7d32;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .tip-item {
+            color: #2e7d32;
+            font-size: 0.9em;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .url-link {
+                font-size: 0.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎓 LinkedIn Education URL Generator</h1>
+        <p class="subtitle">Generate both profile and education section URLs from any LinkedIn profile</p>
+        
+        <div class="info-header">
+            <div class="creator-info">
+                <span class="creator-text">Vibe coded by <strong>Swapnil Bawane</strong> 😊</span>
+                <span class="connect-text">🔗 <a href="https://www.linkedin.com/in/swapnilbawane/" target="_blank" style="color: #0066cc; text-decoration: none;">Connect with me on LinkedIn</a></span>
+            </div>
+            <div class="platform-notice">
+                <span class="notice-icon">📱</span>
+                <span class="notice-text"><strong>Platform Notice:</strong> Works best on Desktop / Laptop / PC only as mobile does not work as expected.</span>
+            </div>
+        </div>
+        
+        <div class="how-to-use">
+            <div class="how-to-title">
+                📖 How to Use This Tool
+            </div>
+            <div class="step-list">
+                This tool helps you search for people across Google and LinkedIn with specific institutional affiliations. Perfect for finding students, alumni, or professionals from Mumbai's top institutions.
+                
+                <ol>
+                    <li><strong>Enter a LinkedIn Profile URL:</strong> Paste any LinkedIn profile URL in the search box (e.g., "https://www.linkedin.com/in/username/")</li>
+                    <li><strong>Generate URLs:</strong> Click the button to create both education section URL and main profile URL</li>
+                    <li><strong>Try Education URL First:</strong> Use the education section URL first - it works specifically for people with detailed education data</li>
+                    <li><strong>Fallback to Profile URL:</strong> If education URL doesn't work, use the main profile URL and scroll to education section manually</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div class="input-group">
+            <label for="linkedinUrl">Enter LinkedIn Profile URL:</label>
+            <input 
+                type="url" 
+                id="linkedinUrl" 
+                placeholder="https://www.linkedin.com/in/username/" 
+                required
+            >
+        </div>
+        
+        <button class="generate-btn" onclick="generateUrls()">
+            Generate URLs
+        </button>
+        
+        <div class="results" id="results">
+            <div class="url-card">
+                <div class="url-title">🎯 Try This First: Education Section URL</div>
+                <div class="url-description">Direct link to education section (works for profiles with detailed education data)</div>
+                <div class="url-link" id="educationUrl" onclick="openUrl(this)"></div>
+                <button class="copy-btn" onclick="copyToClipboard('educationUrl')">Copy URL</button>
+            </div>
+            
+            <div class="url-card">
+                <div class="url-title">📋 Fallback: Main Profile URL</div>
+                <div class="url-description">Use this if the education section URL doesn't work (limited education data)</div>
+                <div class="url-link" id="profileUrl" onclick="openUrl(this)"></div>
+                <button class="copy-btn" onclick="copyToClipboard('profileUrl')">Copy URL</button>
+            </div>
+        </div>
+        
+        <div class="usage-note">
+            <strong>💡 How to use:</strong> Try the Education Section URL first. If it shows an error or doesn't load properly, use the Main Profile URL and scroll to the education section manually. This tool works best on desktop/laptop computers.
+        </div>
+    </div>
+
+    <script>
+        function generateUrls() {
+            const input = document.getElementById('linkedinUrl');
+            const resultsDiv = document.getElementById('results');
+            const educationUrlDiv = document.getElementById('educationUrl');
+            const profileUrlDiv = document.getElementById('profileUrl');
+            
+            // Remove any existing error messages
+            const existingError = document.querySelector('.error');
+            if (existingError) {
+                existingError.remove();
+            }
+            
+            const url = input.value.trim();
+            
+            // Basic validation
+            if (!url) {
+                showError('Please enter a LinkedIn URL');
+                return;
+            }
+            
+            if (!isValidLinkedInUrl(url)) {
+                showError('Please enter a valid LinkedIn profile URL (e.g., https://www.linkedin.com/in/username/)');
+                return;
+            }
+            
+            // Clean up the URL - remove trailing slash and any existing paths
+            const cleanUrl = cleanLinkedInUrl(url);
+            
+            // Generate URLs
+            const profileUrl = cleanUrl;
+            const educationUrl = cleanUrl + '/details/education/';
+            
+            // Display results
+            profileUrlDiv.textContent = profileUrl;
+            educationUrlDiv.textContent = educationUrl;
+            
+            resultsDiv.style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function isValidLinkedInUrl(url) {
+            const linkedinRegex = /^https?:\/\/(www\.)?linkedin\.com\/in\/[a-zA-Z0-9\-]+\/?/;
+            return linkedinRegex.test(url);
+        }
+        
+        function cleanLinkedInUrl(url) {
+            // Remove trailing slash and any paths after the username
+            const match = url.match(/^(https?:\/\/(www\.)?linkedin\.com\/in\/[a-zA-Z0-9\-]+)/);
+            return match ? match[1] : url;
+        }
+        
+        function openUrl(element) {
+            const url = element.textContent;
+            window.open(url, '_blank');
+        }
+        
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const url = element.textContent;
+            
+            navigator.clipboard.writeText(url).then(() => {
+                const button = element.nextElementSibling;
+                const originalText = button.textContent;
+                button.textContent = 'Copied! ✓';
+                button.style.background = '#20c997';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '#28a745';
+                }, 2000);
+            }).catch(() => {
+                // Fallback for older browsers
+                const textarea = document.createElement('textarea');
+                textarea.value = url;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                
+                const button = element.nextElementSibling;
+                const originalText = button.textContent;
+                button.textContent = 'Copied! ✓';
+                button.style.background = '#20c997';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '#28a745';
+                }, 2000);
+            });
+        }
+        
+        function showError(message) {
+            const container = document.querySelector('.container');
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error';
+            errorDiv.textContent = message;
+            container.appendChild(errorDiv);
+            
+            setTimeout(() => {
+                errorDiv.remove();
+            }, 5000);
+        }
+        
+        // Allow Enter key to trigger generation
+        document.getElementById('linkedinUrl').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generateUrls();
+            }
+        });
+        
+        // Auto-focus on input when page loads
+        window.onload = function() {
+            document.getElementById('linkedinUrl').focus();
+        };
+    </script>
+</body>
+</html>
